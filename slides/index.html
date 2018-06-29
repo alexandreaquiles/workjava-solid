@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>SOLID com Java</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <style>
+      small.baseline {
+        vertical-align: baseline;			
+      }
+      section.large-code {
+        top: 10px!important;
+      }
+      section.large-code code {
+        max-height: 100%;
+        overflow: hidden;
+      }
+    </style>
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        
+        <section>
+          <h2>SOLID com Java</h2>
+        </section>
+        
+        <section>
+          <h3>Alexandre Aquiles</h3>
+          <p>Instrutor e Desenvolvedor na <a href="https://www.caelum.com.br/instrutores/alexandre-aquiles">Caelum</a></p>
+          <ul>
+            <li>Twitter: <a href="https://twitter.com/alex_aquiles">@alex_aquiles</a></li>
+            <li>Linkedin: <a href="https://www.linkedin.com/in/alexandreaquiles/">linkedin.com/in/alexandreaquiles</a></li>
+            <li>GitHub: <a href="https://github.com/alexandreaquiles">github.com/alexandreaquiles</a></li>
+            <li>Blog: <a href="https://alexandreaquiles.com.br">alexandreaquiles.com.br</a></li>
+            <li>Livro: <a href="https://www.casadocodigo.com.br/products/livro-git-github">Controlando Versões com Git e GitHub</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Pra que serve OO?</h3>
+          <ul>
+            <li>Modelagem</li>
+            <li>Dependências</li>
+          </ul>
+        </section>
+
+        <section>
+
+          <h3>Modelagem</h3>
+
+          <p>A importância de um <em>domain model</em></p>
+
+          <ul>
+            <li>Feature-Driven Development</li>
+            <li>Domain-Driven Design</li>
+            <li>Card-Responsibility-Collaboration (CRC)</li>
+          </ul>
+
+        </section>
+
+        <section>
+
+          <h3>Dependências</h3>
+
+          <p>A importância de <em>dependências bem gerenciadas</em></p>
+
+          <ul>
+            <li>Design Patterns</li>
+            <li>Dependency Injection</li>
+            <li>GRASP</li>
+            <li><strong>SOLID</strong></li>
+          </ul>
+
+        </section>
+
+        <section>
+          <h3>Parte 1</h3>
+        </section>
+
+        <section>
+          <pre><code class="hljs java">
+public class Empregado {
+  public BigDecimal calculaPagamento() { ... }
+  public BigDecimal calculaTaxas() { ... }
+  public void cadastraHoras(List&lt;Hora&gt; horas) { ... }
+  public void salva() { ... }
+  public static Empregado buscaPorId(Long id) { ... }
+  public String convertePraXML() { ... }
+  public void leXML(String xml) { ... }
+}
+            </code></pre>
+          </section>
+
+        <section>
+
+          <h3>Muitas responsabilidades</h3>
+
+          <ul>
+            <li>calcular pagamento e taxas (Financeiro)</li>
+            <li>cadastrar horas (RH)</li>
+            <li>salvar e buscar por id (Persistência)</li>
+            <li>converter e ler de/para XML (Integração)</li>
+          </ul>
+
+        </section>
+
+        <section>
+
+          <h3>Muitas responsabilidades == muitas razões para mudar</h3>
+
+          <ul>
+            <li>mudança na regra de cálculo das taxas</li>
+            <li>mudança nas regras de horas extra</li>
+            <li>mudança nos índices ou nomes de colunas da tabela do BD</li>
+            <li>mudança de SAX pra StAX ou no Schema do XML</li>
+          </ul>
+
+        </section>
+
+        <section>
+
+            <h3>Coesão</h3>
+  
+            <p>co·e·são</p>
+            <p>sf</p>
+            <ol>
+              <li>FÍS Força de atração entre as partículas ou moléculas de um corpo.</li>
+              <li><strong>FIG Coerência de pensamento ou de um todo.</strong></li>
+              <li>Associação íntima entre pessoas que integram um grupo.</li>
+            </ol>
+            <p>ETIMOLOGIA: lat cohæsĭo.</p>
+            <p>
+              <small>
+                <a href="http://michaelis.uol.com.br/busca?r=0&f=0&t=0&palavra=coesao">Michaelis Online</a>
+              </small>
+            </p>
+  
+        </section>
+  
+        <section>
+
+          <h3>Single Responsibility Principle</h3>
+
+          <p><strong>S</strong><small class="baseline">OLID</small></p>
+
+          <blockquote>"Uma classe deve ter apenas um motivo para ser mudada"</blockquote>
+
+          <p>
+              <small>
+                <a href="https://www.amazon.com.br/Agile-Principles-Patterns-Practices-C/dp/0131857258">Uncle Bob, no livro "Agile Principles, Patterns, and Practices in C#" (2006)</a>
+              </small>
+            </p>
+  
+        </section>
+
+        <section>
+          <h3>DEMO</h3>
+        </section>
+
+        <section>
+
+          <h3>Classes coesas</h3>
+
+          <ol>
+            <li>menores e mais simples de entender</li>
+            <li>menos bugs por classe</li>
+            <li>mais fáceis de reutilizar</li>
+          </ol>
+
+        </section>
+
+        <section>
+
+          <blockquote>Prestar atenção aos imports nos oferece pistas de problemas no gerenciamento de dependências do nosso código.</blockquote>
+
+          <p>
+            <small>
+              <a href="https://alexandreaquiles.com.br/2013/01/13/ouca-seus-imports/">Alexandre Aquiles (eu), no post "Ouça seus imports" (2013)</a>
+            </small>
+          </p>
+
+        </section>
+
+        <section>
+
+          <blockquote>... começar de um código estruturado, modificando-o em pequenos passos, até chegar a um código extensível e com as responsabilidades bem definidas, é uma boa maneira de ver a verdadeira utilidade de OO. E de aprender!</blockquote>
+
+          <p>
+            <small>
+              <a href="https://alexandreaquiles.com.br/2010/10/24/refatorar_aprender_oo/">Alexandre Aquiles (eu), no post "Refatorar é bom para aprender OO" (2010)</a>
+            </small>
+          </p>
+
+        </section>
+
+        <section>
+
+          <h3>MVC</h3>
+
+          <p>Molde pré-estabelecido de distribuição de responsabilidades</p>
+
+          <ul>
+            <li>View: só telas e interação com o usuário</li>
+            <li>Controller: meio-de-campo</li>
+            <li>Model: o resto todo</li>
+          </ul>
+
+        </section>
+
+        <section>
+
+          <h3>Problema comum de Coesão</h3>
+
+          <p>Controller fazendo coisas demais:</p>
+
+          <ul>
+            <li>busca dados do BD</li>
+            <li>faz regra de negócio</li>
+            <li>envia email</li>
+            <li>chama WebService</li>
+            <li>manda resultado para a View</li>
+          </ul>
+
+          <p>Deveria apenas pegar resultados de outras classes e enviar para a View. E vice-versa.</p>
+
+        </section>
+ 
+         <section>
+          <blockquote>Como encontrar classes que não são coesas?<br>
+            Procure por classes que:
+           <ul>
+                <li>possuem muitos métodos diferentes</li>
+                <li>são modificadas com frequência</li>
+                <li>não param nunca de crescer</li>
+              </ul>
+          </blockquote>
+          
+          <p>
+            <small>
+              <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+            </small>
+          </p>
+
+        </section>
+
+
+         <section>
+          <blockquote>Não ache que você conseguirá escrever classes coesas o tempo todo, e de primeira.<br>
+          Escrever código de qualidade é sempre incremental; você modela, observa seu modelo, aprende com ele e o melhora.</blockquote>
+          
+          <p>
+            <small>
+              <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+            </small>
+          </p>
+
+        </section>
+
+        <section>
+            <h3>GRASP</h3>
+            <p><small><strong>General Responsibility Assignment Software Principles</strong></small></p>
+  
+            <p>Princípios criados por Craig Larman que documentam soluções comuns para atribuição de responsabilidades a objetos.</p>
+  
+            <p>
+              <small>
+                <a href="https://www.amazon.com/Applying-UML-Patterns-Introduction-Object-Oriented/dp/0131489062/ref=dp_ob_title_bk">Craig Larman, no livro "Applying UML and Patterns", 3rd Ed. (2004)</a>
+              </small>
+            </p>
+  
+          </section>
+  
+          <section>
+              <h3>GRASP</h3>
+                <small>
+                  <ul>
+                    <li><strong>High cohesion</strong></li>
+                    <li><strong>Low coupling</strong></li>
+                    <li><strong>Indirection</strong></li>
+                    <li><strong>Polymorphism</strong>: use polimorfismo ao invés de if's para o que varia.</li>
+                    <li><strong>Protected variations</strong>: esconda o que varia atrás de uma interface comum.</li>
+                    <li><strong>Information Expert</strong>: atribua uma responsabilidade à classe que tem a maior quantidade de informação para cumpri-la</li>
+                    <li><strong>Controller</strong>: um "ponto de entrada" do sistema além da UI que recebe "eventos". Representa um "caso de uso" no código.</li>
+                    <li><strong>Creator</strong>: encapsula a criação de outros objetos.</li>
+                    <li><strong>Pure fabrication</strong>: classe que não existe no domínio de negócio mas promove baixo acoplamento e alta coesão</li>
+                </ul>
+              </small>
+            </section>
+  
+          <section>
+            <h3>RDD</h3>
+            <p><small><strong>Responsibility Driven Design</strong></small></p>
+            <blockquote>
+              Pense em objetos como pessoas com responsabilidades que colaboram com outras pessoas para fazer coisas. RDD enxerga projeto OO como uma comunidade de objetos colaborativos e responsáveis.
+            </blockquote>
+  
+            <p>
+              <small>
+  
+                <a href="https://www.amazon.com/Applying-UML-Patterns-Introduction-Object-Oriented/dp/0131489062/ref=dp_ob_title_bk">Rebecca Wirfs-Brock citada por Craig Larman no livro "Applying UML and Patterns", 3rd Ed. (2004)</a>
+              </small>
+            </p>
+          </section>
+  
+          <section>
+            <h3>CRC</h3>
+            <p><small><strong>Class-Responsibility-Collaborator</strong></small></p>
+  
+            <p><small>CRC é um técnica criada por Kent Beck e Ward Cunningham pra exploração das classes de um sistema e suas respectivas responsabilidades</small></p>
+            
+            <ol>
+              <li>Encontre as classes</li>
+              <li>Descreva as responsabilidades</li>
+              <li>Defina os colaboradores, para as responsabilidades que a classe precisa de informações de outras classes</li>
+            </ol>
+  
+            <p>
+              <small>
+                <a href="https://www.amazon.com/exec/obidos/ASIN/0521540186/ambysoftinc">Scott Ambler, no livro "The Object Primer" (2004)</a>
+              </small>
+            </p>
+          </section>
+  
+          <section>
+            <h3>CRC</h3>
+            <img height="500" src="images/crcCardExample.jpg" alt="Exemplo de cartão CRC para clientes e pedidos">
+  
+            <p>
+              <small>
+                <a href="https://www.amazon.com/exec/obidos/ASIN/0521540186/ambysoftinc">Scott Ambler, no livro "The Object Primer" (2004)</a>
+              </small>
+            </p>
+          </section>
+    
+          <section>
+            <h3>Duplicação</h3>
+            <blockquote>
+            Dependência é o principal problema em desenvolvimento de software. Duplicação é o sintoma.<br>
+  
+            Mas, ao contrário da maioria dos problemas na vida, nos quais eliminar os sintomas faz com que um problema mais grave apareça em outro lugar, eliminar duplicação nos programas elimina dependência.
+            </blockquote>
+  
+            <p>
+              <small>
+                <a href="https://www.amazon.com/Test-Driven-Development-Kent-Beck/dp/0321146530">Kent Beck, no livro "TDD by Example" (2002)</a>
+              </small>
+            </p>
+  
+          </section>
+  
+          <section>
+            <h3>D.R.Y.</h3>
+            <p>Don't Repeat Yourself</p>
+            <blockquote>Todo bloco de conhecimento deve ter uma representação única, sem ambiguidades e dominante num sistema.</blockquote>
+            <p>
+              <small>
+                <a href="https://www.amazon.com.br/Pragmatic-Programmer-Journeyman-Master/dp/020161622X">Andrew Hunt e Dave Thomas, no livro "The Pragmatic Programmer" (1999)</a>
+              </small>
+            </p>
+          </section>
+  
+          <section>
+            <h3>Regras do Design Simples</h3>
+            <ol>
+              <li>Roda todos os testes</li>
+              <li>Não contém nenhuma duplicação</li>
+              <li>Expressa as ideias com clareza</li>
+              <li>Minimiza o número de classes e métodos</li>
+            </ol>
+  
+            <p>
+              <small>
+                <a href="https://ronjeffries.com/xprog/classics/expemergentdesign/">Kent Beck, citado por Ron Jeffries no post "Essential XP: Emergent Design" (2001)</a>
+              </small>
+            </p>
+          </section>
+          
+          <section>
+            <img src="images/simple-design.png" alt="ciclo sugerido de melhoria da modelagem">
+  
+            <p>
+              <small>
+                <a href="http://blog.thecodewhisperer.com/permalink/putting-an-age-old-battle-to-rest">J. B. Rainsberger, no post "Putting An Age-Old Battle To Rest" (2013)</a>
+              </small>
+            </p>
+          </section>
+
+        <section>
+          <h3>Parte 2</h3>
+        </section>
+
+        <section>
+          <h3>Dependências</h3>
+          <p>(ou acoplamento)</p>
+          <img src="images/DIP-antes.png" alt="UI depende de EmissorNotaFiscal que depende de DAO, Email e SMS">
+        </section>
+
+        <section>
+            <ul>
+              <li>Web (UI) é um detalhe</li>
+              <li>BD (DAO) é um detalhe</li>
+              <li>Email é um detalhe</li>
+              <li>SMS é um detalhe</li>
+            </ul>
+            <p>Os Mecanismos de Entrega mudam...</p>
+            <p>As Regras de Negócio continuam!</p>
+        </section>
+  
+
+        <section>
+            <p>O problema é Regras de Negócio dependeram de Mecanismos de Entrega (detalhes)</p>
+            <p><small>Uma mudança em qualquer um dos Mecanismos de Entrega levará a uma mudança no código de Negócio</small></p>
+        </section>
+  
+        <section>
+            <h3>Volátil</h3>
+
+            <p>vo·lá·til</p>
+            <p>adj m+f</p>
+            <ol>
+              <li>Que voa, que tem a capacidade de voar; voador, voante.</li>
+              <li><strong>FIG Pouco firme; inconstante, mudável, volúvel.</strong></li>
+              <li>FÍS-QUÍM Que pode se reduzir a gás ou a vapor, sob temperaturas e pressões normais.</li>
+              <li>FIG Que não tem matéria ou substância; impalpável.</li>
+            </ol>
+            <p>ETIMOLOGIA: lat volatĭlis.</p>
+            <p>
+              <small>
+                <a href="http://michaelis.uol.com.br/busca?r=0&f=0&t=0&palavra=vol%C3%A1til">Michaelis Online</a>
+              </small>
+            </p>
+        </section>
+
+        <section>
+            <p>Implementações são voláteis</p>
+            <p>Abstrações são (mais) estáveis</p>
+        </section>
+  
+        <section>
+          <h3>Dependency Inversion Principle</h3>
+          <p><small class="baseline">SOLI</small><strong>D</strong></p>
+          <blockquote>"Dependa de abstrações, não de implementações"</blockquote>
+          <p>
+              <small>
+                <a href="http://www.cvc.uab.es/shared/teach/a21291/temes/object_oriented_design/materials_adicionals/principles_and_patterns.pdf">Uncle Bob, no artigo "Design Principles and Design Patterns" (2000)</a>
+              </small>
+            </p>
+          </section>
+
+        <section>
+          <h3>Já li isso antes...</h3>
+          <blockquote>Programe voltado à interface, não à implementação</blockquote>
+          <p>
+              <small>
+                <a href="https://www.amazon.com.br/Design-Patterns-Object-Oriented-Addison-Wesley-Professional-ebook/dp/B000SEIBB8">Gamma &amp; Helm &amp; Johnson &amp; Vlissides, no livro "Design Patterns" (1995)</a>
+              </small>
+            </p>
+        </section>
+
+        <section>
+            <h3>Dependency Inversion Principle</h3>
+            <p><small class="baseline">SOLI</small><strong>D</strong></p>
+            <blockquote>"Módulos de alto nível não devem depender de módulos de baixo nível. Ambos devem depender de abstrações."</blockquote>
+            <blockquote>"Abstrações não devem depender de detalhes. Detalhes devem depender de abstrações."</blockquote>
+            <p>
+                <small>
+                  <a href="https://www.amazon.com.br/Agile-Principles-Patterns-Practices-C/dp/0131857258">Uncle Bob, no livro "Agile Principles, Patterns, and Practices in C#" (2006)</a>
+                </small>
+              </p>
+         </section>
+  
+        <section>
+            <p><strong>Alto Nível</strong> == Regras de Negócio</p>
+            <p><strong>Baixo Nível</strong> == Mecanismos de Entrega</p>
+        </section>
+
+        <section>
+            <img src="images/DIP-depois.png" alt="UI depende de EmissorNotaFiscal que depende de interface AcaoAposEmissao implementadas por DAO, Email e SMS">
+        </section>
+  
+        <section>
+          <pre><code class="hljs java">
+public class EmissorNotaFiscal {
+    private final List&lt;AcaoPosEmissao&gt; acoes;
+    public EmissorNotaFiscal(List&lt;AcaoPosEmissao&gt; acoes) {
+        this.acoes = acoes;
+    }
+    public void emite(Fatura fatura) {
+        NotaFiscal nota = //...
+        for (AcaoPosEmissao acao : acoes) {
+          acao.executa(nota);
+        }
+    }
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <h3>DEMO</h3>
+        </section>
+
+        <section>
+          <blockquote>Um dos lugares mais comuns que os projetos dependem de classes concretas é quando esses projetos criam instâncias.</blockquote>
+          <p>
+            <small>
+              <a href="http://www.cvc.uab.es/shared/teach/a21291/temes/object_oriented_design/materials_adicionals/principles_and_patterns.pdf">Uncle Bob, no artigo "Design Principles and Design Patterns" (2000)</a>
+            </small>
+          </p>
+     </section>
+
+        <section>
+            <h3>Design Pattern</h3>
+            <p>Factory Method (adaptado)</p>
+        </section>
+ 
+        <section>
+            <h3>Moldes de Modelagem</h3>
+  
+            <blockquote>
+                Os design patterns do mundo do software, cuja ideia originou-se da arquitetura de prédios, são uma coleção de soluções comuns para problemas recorrentes. Não são normas de planos, nem moldes de planos. Também não são normas de modelagem.
+  
+                Design patterns são moldes de modelagem.
+            </blockquote>
+  
+            <p>
+                <small>
+                  <a href="https://alexandreaquiles.com.br/2014/02/10/moldes-de-modelagem/">Alexandre Aquiles (eu), no post "Moldes de Modelagem" (2014)</a>
+                </small>
+              </p>
+          </section>
+  
+        <section>
+          <blockquote>Interfaces de Serviço, em geral, são do cliente (quem as usa).</blockquote>
+          <p>
+            <small>
+              <a href="https://www.amazon.com.br/Agile-Principles-Patterns-Practices-C/dp/0131857258">Uncle Bob, no livro "Agile Principles, Patterns, and Practices in C#" (2006)</a>
+            </small>
+          </p>
+      </section>
+
+        <section>
+            <h3>Acoplamento Bom</h3>
+            <p><code>String</code> muda muito pouco.</p>
+            <p>É uma classe concreta mas é estável.</p>
+          </section>
+ 
+        <section>
+          <p>Será que temos que usar abstrações para qualquer dependência?</p>
+        </section>
+
+        <section>
+            <pre><code class="hljs java">
+interface RepositorioDeProdutos {
+  List&lt;Produto&gt; todos();
+  void salva(Produto p);
+}
+
+class ProdutoDao implements RepositorioDeProdutos {
+  //usa o JPA/Hibernate...
+}
+            </code></pre>
+          </section>
+
+          <section>
+              <blockquote>
+                  Essa interface em particular nos seria bastante útil se tivéssemos a necessidade de mudar a maneira de acesso a dados.<br>
+                  DAOs em particular são classes naturalmente estáveis, com interfaces geralmente bastante claras.<br>
+                  O principal aqui é lembrar de separar infraestrutura do resto [...]
+              </blockquote>
+              <p>
+                  <small>
+                    <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+                  </small>
+                </p>
+           </section>
+
+         <section>
+            <blockquote>
+                Devemos balancear entre módulos <strong>estáveis</strong>, em que não queremos
+                mexer nunca, pois eles são importantes e muitas outras classes dependem
+                deles, e módulos mais <strong>instáveis</strong>, que dependem dos estáveis, mas que
+                vez ou outra precisam sofrer alterações.
+            </blockquote>
+            <p>
+                <small>
+                  <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+                </small>
+              </p>
+         </section>
+ 
+        <section>
+          <blockquote>Se você está programando alguma classe
+              qualquer com regras de negócio, e precisa depender de outro módulo, ideal-
+              mente esse outro módulo deve ser uma abstração.</blockquote>
+              <p>
+                <small>
+                  <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+                </small>
+              </p>
+        </section>
+
+        <section>
+          <h3>A Regra da Dependência</h3>
+          <blockquote>
+            Dependências devem apontar apenas para dentro, em direção às regras de negócio.
+          </blockquote>
+          <p>
+            <small>
+              <a href="https://www.amazon.com/Clean-Architecture-Craftsmans-Software-Structure/dp/0134494164">Uncle Bob, no livro "Clean Architecture" (2017)</a>
+            </small>
+          </p>
+      </section>
+
+      <section>
+        <img src="images/high-level-interface-low-level.png" alt="Source code dependency vs Flow Control">
+        <p>
+            <small>
+              <a href="https://skillsmatter.com/skillscasts/2437-uncle-bob-web-architecture">Uncle Bob, na palestra "Why can't anyone get Web architecture right?" (2011)</a>
+            </small>
+          </p>
+      </section>
+
+      <section>
+        <h3>Parte 3</h3>
+      </section>
+
+      <section class="large-code">
+        <pre><code class="hljs java">
+public class CalculadoraDePagamento {
+  public float calcula(double horas,
+                                double valorHora,
+                                boolean pj) {
+    if (horas &lt; 0 || horas &gt; 80) {
+      throw new RuntimeException("Horas excedidas: " + horas);
+    }
+    float pagamento = 0;
+    if (horas &gt; 40) {
+      float horaExtra = horas - 40;
+      if (!pj) {
+        pagamento += (horaExtra * 1.5) * valorHora;
+      } else {
+        pagamento += horaExtra * valorHora;
+      }
+      horas -= horaExtra;
+    }
+    pagamento += horas * valorHora;
+    return pagamento;
+  }
+}
+          </code></pre>
+      </section>
+
+      <section>
+          <h3>Polimorfismo</h3>
+          <blockquote>
+            Objetos têm um mecanismo fabuloso, mensagens polimórficas, que permitem expressar lógica condicional de maneira flexível mas clara. Ao trocar condicionais explícitos por mensagens polimórficas, muitas vezes você consegue reduzir duplicação, tornar seu código mais claro e aumentar a flexibilidade tudo ao mesmo tempo.
+          </blockquote>
+  
+          <p>
+            <small>
+              <a href="https://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672/">Kent Beck, no livro "Refactoring" (1999)</a>
+            </small>
+          </p>
+         </section>
+
+         <section class="large-code">
+          <pre><code class="hljs java">
+public abstract class CalculadoraDePagamento {
+  public float calcula(double horas,
+                                double valorHora) {
+    validaHoras(horas);
+    return determinaPagamento(horas, valorHora);
+  }
+  private void validaHoras(horas) {
+    if (horas &lt; 0 || horas &gt; 80) {
+      throw new RuntimeException("Horas excedidas: " + horas);
+    }
+  }
+  public abstract double determinaPagamento(double horas,
+                                          double valorHora);
+}
+            </code></pre>
+
+            <p>
+              <small>
+                <a href="https://alexandreaquiles.com.br/2010/10/24/refatorar_aprender_oo/">Alexandre Aquiles (eu), no post "Refatorar é bom para aprender OO" (2010)</a>
+              </small>
+            </p>
+  
+        </section>
+
+        <section class="large-code">
+          <pre><code class="hljs java">
+public class CalculadoraPJ extends CalculadoraDePagamento {
+  @Override
+  public double determinaPagamento(double horas,
+                                double valorHora) {
+    return horas * valorHora;
+  }
+}
+
+public class CalculadoraCLT extends CalculadoraDePagamento {
+  @Override
+  public double determinaPagamento(double horas,
+                                double valorHora) {
+    double horaExtra = Math.max(0, horas - 40);
+    return horas * valorHora + horaExtra * valorHora * 0.5;
+  }
+}
+            </code></pre>
+
+            <p>
+              <small>
+                <a href="https://alexandreaquiles.com.br/2010/10/24/refatorar_aprender_oo/">Alexandre Aquiles (eu), no post "Refatorar é bom para aprender OO" (2010)</a>
+              </small>
+            </p>
+
+        </section>
+
+         <section>
+           <h3>Variações protegidas</h3>
+
+           <blockquote>Identifique pontos previstos de variação e crie uma interface estável em torno deles.</blockquote>
+ 
+           <p>
+              <small>
+                <a href="https://www.martinfowler.com/ieeeSoftware/protectedVariation.pdf">Craig Larman, no artigo "Protected Variation" (2001)</a>
+              </small>
+            </p>
+         </section>
+
+        <section>
+          <blockquote>Módulos devem ser abertos (para extensão e adaptação) e fechados (para evitar modificação e afetar clientes).</blockquote>
+          <p>
+              <small>
+                <a href="https://www.amazon.com/Object-Oriented-Software-Construction-Book-CD-ROM/dp/0136291554">Bertrand Meyer, no livro "Object-Oriented Software Construction" (1988)</a>
+              </small>
+            </p>
+        </section>
+
+        <section>
+
+            <h3>Open/Closed Principle</h3>
+  
+            <p><small class="baseline">S</small><strong>O</strong><small class="baseline">LID</small></p>
+  
+            <blockquote>"Deve ser possível estender o comportamento de uma classe sem modificá-la."</blockquote>
+
+            <p>
+                <small>
+                  <a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">Uncle Bob, no post "The Principles of OOD" (2005)</a>
+                </small>
+              </p>
+    
+         </section>
+
+         <section>
+           <blockquote>
+             Devemos escrever módulos que podem ser estendidos sem que sejam modificados.<br>
+             Mudar o que os módulos fazem ser mudar o seu código fonte.
+           </blockquote>
+           <p>
+              <small>
+                <a href="http://www.cvc.uab.es/shared/teach/a21291/temes/object_oriented_design/materials_adicionals/principles_and_patterns.pdf">Uncle Bob, no artigo "Design Principles and Design Patterns" (2000)</a>
+              </small>
+            </p>
+        </section>
+
+        <section>
+            <h3>DEMO</h3>
+         </section>
+
+         <section>
+            <h3>Design Pattern</h3>
+            <p>Strategy</p>
+        </section>
+
+         <section>
+            <h3>Strategy</h3>
+  
+            <blockquote>Encapsular uma família de algoritmos intercambiáveis em objetos com um contrato comum</blockquote>
+  
+            <p>
+                <small>
+                  <a href="https://alexandreaquiles.com.br/2014/03/19/evitando-duplicacao-com-strategy-e-classes-anonimas/">Alexandre Aquiles (eu), no post "Evitando duplicação com Strategy e Classes Anônimas" (2014)</a>
+                </small>
+              </p>
+        </section>
+
+  
+        <section>
+          <blockquote>
+            O <strong>Open/Closed Principle</strong> é o objetivo de uma arquitetura Orientada a Objetos.<br>
+            O <strong>Dependency Inversion Principle</strong> é o seu mecanismo fundamental.
+          </blockquote>
+          <p>
+              <small>
+                <a href="http://www.cvc.uab.es/shared/teach/a21291/temes/object_oriented_design/materials_adicionals/principles_and_patterns.pdf">Uncle Bob, no artigo "Design Principles and Design Patterns" (2000)</a>
+              </small>
+            </p>
+       </section>
+
+       <section>
+          <blockquote>Encontrar os pontos onde sua modelagem precisa ser flexível e onde não precisa é um desafio.</blockquote>
+          
+          <p>
+            <small>
+              <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+            </small>
+          </p>
+       </section>
+
+        <section>
+            <h3>Anti-IF Campaign</h3>
+ 
+            <blockquote>Evite os perigosos IFs e use Objetos para construir código flexível, facilmente modificável e testável e que vai ajudar a evitar muitas dores de cabeça e fins de semana debugando!</blockquote>
+ 
+            <p>
+               <small>
+                 <a href="https://francescocirillo.com/pages/anti-if-campaign">Francesco Cirillo, no site "Anti-IF Campaign"</a>
+               </small>
+             </p>
+         </section>
+
+         <section>
+           <h3>DEMO: evitando <code>if</code>s</h3>
+         </section>
+
+         <section>
+           <h3>Parte 4</h3>
+         </section>
+
+         <section>
+           <h3>Plugins</h3>
+         </section>
+ 
+         <section>
+            <h4>Aplicação não pode depender de Plugin</h4>
+            <img src="images/cotuba-chamando-tema_paradizo.png" alt="Aplicação chamando o plugin (errado)">
+            <ul>
+              <li>Quais os nomes das classes?</li>
+              <li>Quais as assinaturas dos métodos?</li>
+            </ul>
+            <p>
+              <small>
+                <a href="http://blog.caelum.com.br/plugins-em-java-com-service-providers/">Alexandre Aquiles (eu), no post "Plugins em Java com Service Providers" (2018)</a>
+              </small>
+            </p>
+          </section>
+
+          <section>
+            <h3>Inversão de Dependência</h3>
+            <img src="images/dependencia-invertida-tema_paradizo-cotuba-1.png" alt="Inversão de Dependências">
+            <p>
+                <small>
+                  <a href="http://blog.caelum.com.br/plugins-em-java-com-service-providers/">Alexandre Aquiles (eu), no post "Plugins em Java com Service Providers" (2018)</a>
+                </small>
+              </p>
+            </section>
+
+          <section>
+            <h3>DEMO</h3>
+          </section>
+
+          <section>
+              <pre><code class="hljs java">
+interface Imposto {
+  NotaFiscal geraNota();
+  double imposto(double valorCheio);
+}
+                </code></pre>
+                <p>
+                    <small>
+                      <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+                    </small>
+                  </p>
+            </section>
+
+          <section>
+            <h5>Imposto com nota</h5>
+            <pre><code class="hljs java">
+class ISS implements Imposto {
+  public double imposto(double valorCheio) {
+    return 0.1 * valorCheio;
+  }
+
+  public NotaFiscal geraNota() {
+    return new NotaFiscal(...);
+  }
+}
+                </code></pre>
+                <p>
+                    <small>
+                      <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+                    </small>
+                  </p>
+            </section>
+
+            <section>
+              <h5>Imposto sem nota</h5>
+                <pre><code class="hljs java">
+class IXMX implements Imposto {
+  public double imposto(double valorCheio) {
+    return 0.2 * valorCheio;
+  }
+
+  public NotaFiscal geraNota() {
+    throw new NaoGeraNotaException();
+    //ou return null;
+  }
+}
+                  </code></pre>
+                  <p>
+                      <small>
+                        <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+                      </small>
+                    </p>
+        </section>
+
+        <section>
+          <h3>Interface Segregation Principle</h3>
+          <p><small class="baseline">SOL</small><strong>I</strong><small class="baseline">D</small></p>
+  
+          <blockquote>"Clientes não devem ser obrigados a depender de métodos que eles não usam."</blockquote>
+          <p>
+              <small>
+                <a href="https://www.amazon.com.br/Agile-Principles-Patterns-Practices-C/dp/0131857258">Uncle Bob, no livro "Agile Principles, Patterns, and Practices in C#" (2006)</a>
+              </small>
+            </p>
+ 
+        </section>
+
+        <section>
+            <blockquote>"Muitas interfaces específicas para cada cliente são melhores que uma interface de propósito geral"</blockquote>
+            <p>
+                <small>
+                  <a href="http://www.cvc.uab.es/shared/teach/a21291/temes/object_oriented_design/materials_adicionals/principles_and_patterns.pdf">Uncle Bob, no artigo "Design Principles and Design Patterns" (2000)</a>
+                </small>
+              </p>
+        </section>
+ 
+        <section>
+              <pre><code class="hljs java">
+interface CalculadorDeImposto {
+  double imposto(double valorCheio);
+}
+
+interface GeradorDeNota {
+  NotaFiscal geraNota();
+}
+                </code></pre>
+                <p>
+                    <small>
+                      <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+                    </small>
+                  </p>
+                </section>
+
+        <section>
+            <h3>DEMO</h3>
+        </section>
+
+        <section>
+            <blockquote>Interfaces coesas são aquelas cujos comportamentos são simples e bem definidos.<br>
+              [...]<br>
+              Classes que dependem de interfaces leves sofrem menos com mudanças em outros pontos do sistema.
+            </blockquote>
+            <p>
+              <small>
+                <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+              </small>
+            </p>
+        </section>
+        
+        <section>
+            <blockquote>
+              Clientes separados, interfaces separadas.<br>
+            </blockquote>
+            <p>
+              <small>
+                <a href="https://www.amazon.com.br/Agile-Principles-Patterns-Practices-C/dp/0131857258">Uncle Bob, no livro "Agile Principles, Patterns, and Practices in C#" (2006)</a>
+              </small>
+            </p>
+        </section>
+
+        <section>
+            <pre><code class="hljs java">
+public class Matricula {
+  //usados pelo relatório de matrícula
+  public String getNome() { ... }
+  public LocalDate getData() { ... }
+
+  //usados pelo financeiro
+  public Boleto preparaBoleto() { ... }
+  public void confirmaPagamento(Pagamento pagamento) { ... }
+}
+              </code></pre>
+              <p>
+                <small>
+                  <a href="https://www.amazon.com/UML-Java%C2%BF-Programmers-Robert-Martin/dp/0131428489">Baseado no livro de Uncle Bob, "UML for Java Programmers" (2003)</a>
+                </small>
+              </p>
+          </section>
+
+          <section class="large-code">
+              <pre><code class="hljs java">
+interface MatriculaParaRelatorio {
+  String getNome();
+  LocalDate getData();
+}
+
+interface MatriculaParaFinancas {
+  Boleto preparaBoleto();
+  void confirmaPagamento(Pagamento pagamento);
+}
+
+public class Matricula implements MatriculaParaRelatorio,
+                                  MatriculaParaFinancas {
+  //...
+}
+                </code></pre>
+                <p>
+                  <small>
+                    <a href="https://www.amazon.com/UML-Java%C2%BF-Programmers-Robert-Martin/dp/0131428489">Baseado no livro de Uncle Bob, "UML for Java Programmers" (2003)</a>
+                  </small>
+                </p>
+            </section>
+
+            <section>
+                <pre><code class="hljs java">
+public class NotaFiscal {
+  public NotaFiscal(
+    Cliente cliente,
+    List&lt;Item&gt; itens,
+    List&lt;Desconto&gt; descontos,
+    Endereco entrega,
+    Endereco cobranca,
+    FormaDePagamento pagto,
+    double valorTotal
+  ) { ...}
+  // muitos atributos e métodos
+}
+                  </code></pre>
+                  <p>
+                      <small>
+                        <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+                      </small>
+                    </p>
+        </section>
+
+        <section>
+            <pre><code class="hljs java" data-noescape>
+class CalculadorDeImposto {
+  public double calcula(<mark>NotaFiscal nf</mark>) {
+    double total = 0;
+    for(Item item : <mark>nf.getItens()</mark>) {
+      if(item.getValor()&gt;1000) 
+        total+= item.getValor() * 0.02;
+      else
+        total+= item.getValor() * 0.01;
+    }
+    return total;
+  }
+}
+              </code></pre>
+              <p>
+                  <small>
+                    <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+                  </small>
+                </p>
+    </section>
+
+    <section>
+        <pre><code class="hljs java">
+interface Tributavel {
+  List&lt;tItem&gt; itensASeremTributados();
+}
+
+class NotaFiscal implements Tributavel {
+  public NotaFiscal(...) { ... }
+
+  public List&lt;Item&gt; itensASeremTributados() { ... }
+}
+          </code></pre>
+          <p>
+              <small>
+                <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+              </small>
+            </p>
+</section>
+
+    <section>
+        <pre><code class="hljs java" data-noescape>
+class CalculadorDeImposto {
+public double calcula(<mark>Tributavel t</mark>) {
+double total = 0;
+for(Item item : <mark>t.itensASeremTributados()</mark>) {
+  if(item.getValor()&gt;1000) 
+    total+= item.getValor() * 0.02;
+  else
+    total+= item.getValor() * 0.01;
+}
+return total;
+}
+}
+          </code></pre>
+          <p>
+              <small>
+                <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+              </small>
+            </p>
+</section>
+
+      <section>
+        <blockquote>
+            Se você tiver uma classe que tenha vários clientes, em vez de carregar a classe com todos os métodos de que os clientes precisam, crie interfaces específicas para cada cliente e herde-os na classe.
+        </blockquote>
+        <p>
+            <small>
+              <a href="http://www.cvc.uab.es/shared/teach/a21291/temes/object_oriented_design/materials_adicionals/principles_and_patterns.pdf">Uncle Bob, no artigo "Design Principles and Design Patterns" (2000)</a>
+            </small>
+          </p>
+      </section>
+
+
+      <section>
+        <h3>Parte 5</h3>
+      </section>
+
+      <section>
+        <h3>DEMO</h3>
+      </section>
+
+      <section>
+        <h3>Inveja de Funcionalidades <small class="baseline">(ou dados)</small></h3>
+        <blockquote>
+          A essência dos objetos é que eles são uma técnica para empacotar dados com os processos usados nesses dados.<br>
+          Um indício clássico de problema é um método que parece mais interessado em uma classe diferente daquela na qual ele se encontra.<br>
+          O foco mais comum da inveja são os dados.
+        </blockquote>
+        <p>
+          <small>
+            <a href="https://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672/">Kent Beck e Martin Fowler, no livro "Refactoring" (1999)</a>
+          </small>
+        </p>
+      </section>
+
+      <section>
+        <h3>Encapsulamento</h3>
+        <blockquote>
+          Perceber se um código está bem encapsulado ou não, não é tão difícil. [...] se pergunte:<br>
+          <ul>
+            <li><strong>O que esse método faz?</strong> Provavelmente sua resposta será: eu sei o que o método faz pelo nome dele [...]</li>
+            <li><strong>Como ele faz isso?</strong> Sua resposta provavelmente é: se eu olhar só para esse código, não dá para responder.</li>
+          </ul>
+        </blockquote>
+        <p>
+          <small>
+            <a href="https://www.casadocodigo.com.br/products/livro-oo-solid">Maurício Aniche, no livro "OO e SOLID para Ninjas" (2015)</a>
+          </small>
+        </p>
+      </section>
+
+      <section>
+        <h3>Tell, Don't Ask</h3>
+        <blockquote>
+          Envie comandos para objetos dizendo o que você quer fazer.<br>
+          Explicitamente, não queremos consultar um objeto sobre seu estado, tomar uma decisão e, então, dizer ao objeto o que fazer.
+        </blockquote>
+        <p>
+          <small>
+            <a href="https://media.pragprog.com/articles/jan_03_enbug.pdf">Andy Hunt e Dave Thomas, no artigo "The Art of Enbugging" (2003)</a>
+          </small>
+        </p>
+      </section>
+
+      <section>
+        <blockquote>
+            Código procedural tende a obter informações e, em seguida, tomar decisões baseadas nessas informações.<br><br>
+            Código OO diz a objetos que façam coisas.
+        </blockquote>
+        <p>
+          <small>
+            <a href="https://www.amazon.com/Smalltalk-Example-Developers-Alec-Sharp/dp/0079130364">Alec Sharp, no artigo "Smalltalk by Example" (1997)</a>
+          </small>
+        </p>
+      </section>
+
+      <section>
+        <blockquote>
+            A <strong>Lei de Demetra</strong> afirma que todo método de um objeto deve chamar apenas métodos pertencentes a:
+            <ul>
+              <li>si mesmo</li>
+              <li>quaisquer parâmetros que foram passados para o método</li>
+              <li>quaisquer objetos criados</li>
+              <li>qualquer composição</li>
+            </ul>
+        </blockquote>
+        <p>
+          <small>
+            <a href="https://media.pragprog.com/articles/jan_03_enbug.pdf">Andy Hunt e Dave Thomas, no artigo "The Art of Enbugging" (2003)</a>
+          </small>
+        </p>
+      </section>
+
+      <section>
+        <blockquote>
+            Escrever <strong>código tímido</strong> é apenas um pequeno começo para evitar a introdução de bugs, mas realmente ajuda.<br>
+            Assim como no mundo real, boas cercas fazem bons vizinhos - contanto que você não olhe pela cerca.
+        </blockquote>
+        <p>
+          <small>
+            <a href="https://media.pragprog.com/articles/jan_03_enbug.pdf">Andy Hunt e Dave Thomas, no artigo "The Art of Enbugging" (2003)</a>
+          </small>
+        </p>
+      </section>
+
+      <section>
+        <h3>DEMO</h3>
+      </section>
+
+      <section>
+          <h3>Design Pattern</h3>
+          <p>Iterator</p>
+      </section>
+  
+      <section>
+        <h3>OO == Herança ???</h3>
+      </section>
+
+      <section>
+        <blockquote>
+            Se um gato possui <code>raça</code> e <code>patas</code>, e um cachorro possui <code>raça</code>, <code>patas</code> e <code>tipoDoPelo</code>, logo <code>Cachorro extends Gato</code>?<br>
+            Pode parecer engraçado, mas é [...] herança por preguiça, por comodismo, por que vai dar uma ajudinha.<br>
+            A relação “é um” não se encaixa aqui, e vai nos gerar problemas.
+        </blockquote>
+        <p>
+            <small>
+              <a href="http://blog.caelum.com.br/como-nao-aprender-orientacao-a-objetos-heranca/">Paulo Silveira, no post "Como não aprender orientação a objetos: Herança" (2006)</a>
+            </small>
+          </p>
+    </section>
+
+    <section>
+      <h3>DEMO</h3>
+    </section>
+
+    <section>
+      <h3>Intimidade Inadequada</h3>
+      <blockquote><small>
+        Às vezes as classes se tornam íntimas demais e gastam tempo demais sondando as partes privadas das outras.<br>
+        Podemos não ser pudicos quando o assunto são pessoas, mas achamos que nossas classes devem seguir regras puritanas rígidas.<br>
+      </small></blockquote>
+      <blockquote>
+          A herança pode muitas vezes levar à intimidade excessiva. Subclasses sempre saberão mais sobre seus pais do que esses gostariam que elas soubessem.
+      </blockquote>
+      <p>
+        <small>
+          <a href="https://www.amazon.com/Refactoring-Improving-Design-Existing-Code/dp/0201485672/">Kent Beck e Martin Fowler, no livro "Refactoring" (1999)</a>
+        </small>
+      </p>
+    </section>
+
+    <section>
+      <blockquote>
+          Como a herança expõe uma subclasse a detalhes da implementação de sua superclasse, costuma-se dizer que "a herança quebra o encapsulamento".
+      </blockquote>
+      <p>
+          <small>
+            <a href="https://www.amazon.com.br/Design-Patterns-Object-Oriented-Addison-Wesley-Professional-ebook/dp/B000SEIBB8">Gamma &amp; Helm &amp; Johnson &amp; Vlissides, no livro "Design Patterns" (1995)</a>
+          </small>
+        </p>
+    </section>
+
+    <section>
+      <pre><code class="hljs java">
+package java.util.Properties;
+
+//...
+
+public class Properties
+  extends Hashtable&lt;Object,Object&gt; {
+
+  //...
+
+}
+      </code></pre>
+    </section>
+
+    <section>
+      <blockquote>
+          Como <code>Properties</code> herda de <code>Hashtable</code>, os métodos <code>put</code> e <code>putAll</code> podem ser aplicados a um objeto <code>Properties</code>.<br><br>
+          Seu uso é fortemente desencorajado, pois permitem que sejam inseridas entradas cujas chaves ou valores não são <code>String</code>s.
+      </blockquote>
+        <p>
+          <small>
+            <a href="https://docs.oracle.com/javase/10/docs/api/java/util/Properties.html">Javadoc de java.util.Properties</a>
+          </small>
+        </p>
+      </section>
+
+      <section class="large-code">
+          <pre><code class="hljs java">
+public class OiServlet extends HttpServlet {
+
+  public void init(ServletConfig config)
+                          throws ServletException {
+
+    super.init(config); //se NÃO chamar, dá pau...
+
+  }
+
+  protected void service(HttpServletRequest req, 
+                         HttpServletResponse res)
+                          throws IOException,
+                                 ServletException {
+
+    super.service(req, res); //se chamar, dá pau...
+
+  }
+
+}
+          </code></pre>
+        </section>
+    
+      <section>
+          <blockquote>
+              Sendo assim, em alguns casos você deve, e em outros não deve chamar o super, e você só vai saber disso quando conhecer o código fonte
+              de sua classe pai <code>HttpServlet</code> (ou ler a documentação sobre esse comportamento estranho),
+              <strong>quebrando o princípio de encapsulamento</strong>.
+          </blockquote>
+          <p>
+              <small>
+                <a href="http://blog.caelum.com.br/como-nao-aprender-orientacao-a-objetos-heranca/">Paulo Silveira, no post "Como não aprender orientação a objetos: Herança" (2006)</a>
+              </small>
+            </p>
+      </section>
+
+      <section>
+        <h3>DEMO</h3>
+      </section>
+
+      <section>
+        <h3>Substituibilidade</h3>
+        <blockquote>
+          Se para cada objeto <code>o1</code> do tipo <code>S</code> há um objeto <code>o2</code> do tipo <code>T</code> que
+          para todos os programas <code>P</code> definidos em termos de <code>T</code>, o comportamento de <code>P</code> não é 
+          modificado quando <code>o1</code> é substituído por <code>o2</code>, então <code>S</code> é um subtipo de <code>T</code>.
+        </blockquote>
+        <p>
+          <small>
+            <a href="https://pdfs.semanticscholar.org/36be/babeb72287ad9490e1ebab84e7225ad6a9e5.pdf">Barbara Liskov, no artigo “Data Abstraction and Hierarchy” (1988)</a>
+          </small>
+        </p>
+    </section>
+
+    <section>
+      <img src="images/wtf.jpg" alt="WTF!?">
+    </section>
+
+    <section>
+      <h3>Liskov Substitution Principle</h3>
+      <p><small class="baseline">SO</small><strong>L</strong><small class="baseline">ID</small></p>
+      <blockquote>
+          "Subtipos devem ser substituíveis por seus tipos base."
+      </blockquote>
+      <p>
+          <small>
+            <a href="https://www.amazon.com.br/Agile-Principles-Patterns-Practices-C/dp/0131857258">Uncle Bob, no livro "Agile Principles, Patterns, and Practices in C#" (2006)</a>
+          </small>
+        </p>
+    </section>
+
+    <section>
+        <img src="images/ahn.jpg" alt="Ahn!">
+    </section>
+  
+    <section>
+        <blockquote>
+          <ul>
+            <li>Item 14: Prefira composição a herança</li>
+            <li>Item 15: Modele pensando em herança ou proíba-a</li>
+            <li>Item 16: Prefira interfaces a classes abstratas</li>
+          </ul>
+        </blockquote>
+        <p>
+            <small>
+              <a href="https://www.amazon.com/Effective-Java-Programming-Language-Guide/dp/0201310058">Joshua Bloch, no livro "Effective Java" (2001)</a>
+            </small>
+          </p>
+    </section>
+
+    <section>
+      <h3>DEMO</h3>
+    </section>
+
+    <section>
+      <h3>Parte 6</h3>
+      <h4>(extra)</h4>
+    </section>
+
+    <section>
+      <h6>Componentes (ou módulos)</h6>
+      <small>
+        <ul>
+          <li>Unidade de implantação e gerenciamento</li>
+          <li>Unidade de composição e teste</li>
+          <li>Unidade de reuso intraprocesso</li>
+        </ul>
+      </small>
+      <figure>
+        <img src="images/modularity-patterns.jpg" alt="Módulo como a unidade de implantação, gerenciamento, composição, teste e reuso intraprocesso">
+      </figure>
+      <p>
+        <small>
+          <a href="https://www.amazon.com.br/Java-Application-Architecture-Modularity-Patterns/dp/0321247132">Kirk Knoernschild, no livro "Java Application Architecture: Modularity Patterns" (2012)</a>
+        </small>
+      </p>
+  </section>
+
+  <section>
+    <h3>Componente <small class="baseline">(ou módulo)</small> == JAR</h3>
+    <blockquote>
+      O melhor candidato à unidade de modularidade na plataforma Java é um arquivo JAR!
+    </blockquote>
+    <p>
+        <small>
+          <a href="https://www.amazon.com.br/Java-Application-Architecture-Modularity-Patterns/dp/0321247132">Kirk Knoernschild, no livro "Java Application Architecture: Modularity Patterns" (2012)</a>
+        </small>
+      </p>
+  </section>
+
+  <section>
+    <h5><del>Pacotes</del></h5>
+    <h4>Componentes (ou módulos)</h4>
+    <blockquote>Nesse contexto, um <strong>pacote</strong> é um entregável binário como um arquivo <code>.jar</code> ou  um <code>dll</code>, em oposição a um <code>package</code> Java ou um <code>namespace</code> C++.</blockquote>
+    <p>
+      <small>
+        <a href="http://butunclebob.com/ArticleS.UncleBob.PrinciplesOfOod">Uncle Bob, no post "The Principles of OOD" (2005)</a>
+      </small>
+    </p>
+  </section>
+
+  <section>
+      <h3>Porque componentizar / modularizar?</h3>
+      <ul>
+        <li>Reuso</li>
+        <li>Composição</li>
+        <li>Gerenciamento das dependências</li>
+        <li>Desenvolvimento independente</li>
+      </ul>
+  </section>
+
+  <section>
+    <h6>Uma aplicação nem sempre tem apenas um JAR</h6>
+  </section>
+
+  <section>
+    <h4>Como componentizar / modularizar ?</h4>
+  </section>
+
+  <section>
+    <h3>Princípios de Coesão de Componentes</h3>
+    <ul>
+      <li><strong><em>Release Reuse Equivalency Principle:</em></strong> A granularidade de reuso é a granularidade de entrega.</li>
+      <li><strong><em>Common Closure Principle:</em></strong> Classes que são modificadas juntas devem estar no mesmo componente.</li>
+      <li><strong><em>Common Reuse Principle:</em></strong> Classes que são usadas juntas devem estar no mesmo componente.</li>
+    </ul>
+  </section>
+  
+  <section>
+    <h3>Princípios de Acoplamento de Componentes</h3>
+    <ul>
+      <li><strong><em></em>Acyclic Dependencies Principle:</em></strong> O grafo de dependências de componentes não deve ter ciclos.</li>
+      <li><strong><em>Stable Dependencies Principle:</em></strong> Dependa na direção da estabilidade.</li>
+      <li><strong><em>Stable Abstractions Principle:</em></strong> Abstração traz estabilidade.</li>
+    </ul>
+  </section>
+
+  <section>
+      <h3>Arquitetura de Plugins</h3>
+      <blockquote>
+          Usando interfaces, invertemos as dependências para que todos dependam do <em>domain model</em>, que não depende de ninguém.<br>
+          As dependências sempre apontam na direção das regras de negócio, nunca ao contrário.<br>
+          Cada <em>mecanismo de entrega</em> seria um plugin diferente.
+      </blockquote>
+      <p>
+          <small>
+            <a href="http://blog.caelum.com.br/simplicando-service-providers-com-modulos-do-java-9/">Alexandre Aquiles (eu), no post "Simplificando Service Providers com módulos do Java 9+" (2018)</a>
+          </small>
+        </p>
+    </section>
+
+    <section>
+        <img src="images/cotuba-hexagonal.png" alt="Cotuba com Arquitetura Hexagonal">
+        <p>
+            <small>
+              <a href="http://blog.caelum.com.br/simplicando-service-providers-com-modulos-do-java-9/">Alexandre Aquiles (eu), no post "Simplificando Service Providers com módulos do Java 9+" (2018)</a>
+            </small>
+          </p>
+      </section>
+
+    <section>
+      <h3>DEMO</h3>
+    </section>
+
+    <section>
+      <h3>JPMS</h3>
+      <h4>( Java Platform Module System )</h4>
+      <p>Encapsulamento para módulos no Java 9+</p>
+      <small>
+        <p>Mais info na minha palestra no WorkJava 2018</p>
+        <p><a href="https://github.com/alexandreaquiles/workjava-java9e10">github.com/alexandreaquiles/workjava-java9e10</a></p>
+      </small>
+    </section>
+
+    <section>
+        <img src="images/CleanArchitecture.jpg" alt="Clean Architecture">
+        <p>
+          <small>
+            <a href="https://www.amazon.com/Clean-Architecture-Craftsmans-Software-Structure/dp/0134494164">Uncle Bob, no livro "Clean Architecture" (2017)</a>
+          </small>
+        </p>
+    </section>
+
+    <section>
+        <blockquote>
+          Não pule para microsserviços só porque parece legal.<br>
+          Segregue o sistema em JARs usando uma arquitetura de plug-ins primeiro.<br>
+          Se isso não for suficiente, considere a introdução de <em>service boundaries</em> em pontos estratégicos.
+        </blockquote>
+        <p>
+          <small>
+            <a href="https://blog.cleancoder.com/uncle-bob/2014/09/19/MicroServicesAndJars.html">Uncle Bob, no post "Microservices and Jars" (2014)</a>
+          </small>
+        </p>
+    </section>
+
+    <section>
+          <h3>Dúvidas?</h3>
+          <p><a href="https://github.com/alexandreaquiles/workjava-solid">https://github.com/alexandreaquiles/workjava-solid</a></p>
+        </section>
+
+        </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      Reveal.initialize({
+        progress: true,
+        history: true,
+        dependencies: [
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+        ]
+      });
+    </script>
+  </body>
+</html>
