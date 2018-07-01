@@ -183,7 +183,7 @@ public class Main {
 				PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**/*.md");
 				Stream<Path> arquivosMD = Stream.empty();
 				try {
-					arquivosMD = Files.list(diretorioDosMD).filter(arquivo -> matcher.matches(arquivo));
+					arquivosMD = Files.list(diretorioDosMD).filter(arquivo -> matcher.matches(arquivo)).sorted();
 				} catch (IOException ex) {
 					throw new RuntimeException(
 							"Erro tentando encontrar arquivos .md em " + diretorioDosMD.toAbsolutePath(), ex);
