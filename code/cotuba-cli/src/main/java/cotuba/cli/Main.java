@@ -36,7 +36,6 @@ public class Main {
 					System.out.println(contagem.getPalavra() + "\t" + contagem.getQuantidade());
 				}
 				
-				contagemPalavras.values();
 			}
 
 		} catch (Exception ex) {

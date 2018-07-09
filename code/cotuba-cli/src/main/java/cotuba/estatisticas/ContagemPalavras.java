@@ -1,14 +1,13 @@
 package cotuba.estatisticas;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ContagemPalavras extends TreeMap<String, Integer> implements Iterable<ContagemPalavras.Contagem> {
+public class ContagemPalavras implements Iterable<ContagemPalavras.Contagem> {
 
-	private static final long serialVersionUID = 1L;
-
+	private Map<String, Integer> map = new TreeMap<String, Integer>();
+	
 	public class Contagem {
 		private final String palavra;
 		private final Integer quantidade;
@@ -28,7 +27,7 @@ public class ContagemPalavras extends TreeMap<String, Integer> implements Iterab
 	}
 	
 	public void adicionaPalavra(String palavra) {
-		Integer contagem = get(palavra);
+		Integer contagem = map.get(palavra);
 		
 		if (contagem != null) {
 			contagem++;
@@ -36,12 +35,12 @@ public class ContagemPalavras extends TreeMap<String, Integer> implements Iterab
 			contagem = 1;
 		}
 		
-		put(palavra, contagem);
+		map.put(palavra, contagem);
 	}
 
 	@Override
 	public Iterator<Contagem> iterator() {
-		Iterator<Map.Entry<String, Integer>> interno = entrySet().iterator();
+		Iterator<Map.Entry<String, Integer>> interno = map.entrySet().iterator();
 		
 		return new Iterator<ContagemPalavras.Contagem>() {
 
@@ -59,13 +58,4 @@ public class ContagemPalavras extends TreeMap<String, Integer> implements Iterab
 		};
 	}
 
-	@Override
-	public void clear() {
-		throw new UnsupportedOperationException();
-	}
-	
-	@Override
-	public Collection<Integer> values() {
-		throw new UnsupportedOperationException();
-	}
 }
