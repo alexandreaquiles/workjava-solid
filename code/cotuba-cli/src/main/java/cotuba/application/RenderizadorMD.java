@@ -4,14 +4,14 @@ import java.nio.file.Path;
 import java.util.List;
 
 import cotuba.domain.Capitulo;
-import cotuba.md.RenderizadorMD;
+import cotuba.md.RenderizadorMDImpl;
 
-public interface IRenderizadorMD {
+public interface RenderizadorMD {
 
 	List<Capitulo> renderiza(Path diretorioDosMD);
 	
-	static IRenderizadorMD cria() {
-		return new RenderizadorMD();
+	static RenderizadorMD cria() {
+		return new RenderizadorMDImpl();
 	}
 
 }

@@ -12,19 +12,19 @@ public class Cotuba {
 		
 		Livro livro = new Livro(formato, arquivoDeSaida);
 
-		IRenderizadorMD renderizadorMD = IRenderizadorMD.cria();
+		RenderizadorMD renderizadorMD = RenderizadorMD.cria();
 		List<Capitulo> capitulos = renderizadorMD.renderiza(diretorioDosMD);
 		
 		livro.adicionaCapitulos(capitulos);
 		
 		if ("pdf".equals(formato)) {
 			
-			IGeradorPDF geradorPDF = IGeradorPDF.cria();
+			GeradorPDF geradorPDF = GeradorPDF.cria();
 			geradorPDF.gera(livro);
 
 		} else if ("epub".equals(formato)) {
 			
-			IGeradorEPUB geradorEPUB = IGeradorEPUB.cria();;
+			GeradorEPUB geradorEPUB = GeradorEPUB.cria();;
 			geradorEPUB.gera(livro);
 			
 		} else {

@@ -13,10 +13,10 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
-import cotuba.application.IRenderizadorMD;
+import cotuba.application.RenderizadorMD;
 import cotuba.domain.Capitulo;
 
-public class RenderizadorMD implements IRenderizadorMD {
+public class RenderizadorMDImpl implements RenderizadorMD {
 
 	@Override
 	public List<Capitulo> renderiza(Path diretorioDosMD) {
