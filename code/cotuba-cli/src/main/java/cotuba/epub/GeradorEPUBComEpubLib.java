@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import cotuba.application.GeradorEPUB;
+import cotuba.application.GeradorLivro;
 import cotuba.domain.Capitulo;
 import cotuba.domain.Livro;
 import nl.siegmann.epublib.domain.Book;
@@ -12,7 +12,7 @@ import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.epub.EpubWriter;
 import nl.siegmann.epublib.service.MediatypeService;
 
-public class GeradorEPUBComEpubLib implements GeradorEPUB {
+public class GeradorEPUBComEpubLib implements GeradorLivro {
 
 	@Override
 	public void gera(Livro livro) {

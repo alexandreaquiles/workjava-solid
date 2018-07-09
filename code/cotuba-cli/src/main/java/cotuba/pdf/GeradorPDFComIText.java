@@ -13,11 +13,11 @@ import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.property.AreaBreakType;
 
-import cotuba.application.GeradorPDF;
+import cotuba.application.GeradorLivro;
 import cotuba.domain.Capitulo;
 import cotuba.domain.Livro;
 
-public class GeradorPDFComIText implements GeradorPDF {
+public class GeradorPDFComIText implements GeradorLivro {
 	
 	@Override
 	public void gera(Livro livro) {
