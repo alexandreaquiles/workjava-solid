@@ -1,9 +1,5 @@
 package br.com.alexandreaquiles.workjava;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -21,8 +17,7 @@ public class TemaWorkJava implements Plugin {
 			String html = capitulo.getConteudoHTML();
 			Document document = Jsoup.parse(html);
 
-			Path cssPath = Paths.get(TemaWorkJava.class.getResource("/tema.css").toURI());
-			String css = new String(Files.readAllBytes(cssPath));
+			String css = FileUtils.getResourceContents("/tema.css");
 
 			document.select("head").append("<style> " + css + " </style>");
 			
