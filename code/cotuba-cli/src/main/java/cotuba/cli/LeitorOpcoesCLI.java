@@ -1,4 +1,4 @@
-package cotuba;
+package cotuba.cli;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,7 +13,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.UnrecognizedOptionException;
 
-public class LeitorOpcoesCLI {
+class LeitorOpcoesCLI {
 
 	private Path diretorioDosMD;
 	private String formato;

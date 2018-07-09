@@ -1,8 +1,10 @@
-package cotuba;
+package cotuba.md;
 
 import org.commonmark.node.AbstractVisitor;
 import org.commonmark.node.Heading;
 import org.commonmark.node.Text;
+
+import cotuba.domain.Capitulo;
 
 class HeadingVisitor extends AbstractVisitor {
 	private final Capitulo capitulo;

@@ -1,4 +1,4 @@
-package cotuba;
+package cotuba.md;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -12,6 +12,8 @@ import java.util.stream.Stream;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+
+import cotuba.domain.Capitulo;
 
 public class RenderizadorMD {
 
