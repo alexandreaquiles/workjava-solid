@@ -16,6 +16,25 @@ import org.commonmark.renderer.html.HtmlRenderer;
 public class RenderizadorMD {
 
 	public List<Capitulo> renderiza(Path diretorioDosMD) {
+		Stream<Path> arquivosMD = obtemArquivosMD(diretorioDosMD);
+		
+		List<Capitulo> capitulos = new ArrayList<>();
+
+		arquivosMD.forEach(arquivoMD -> {
+			
+			Capitulo capitulo = new Capitulo();
+			
+			Node document = parseDoMD(arquivoMD, capitulo);
+
+			renderizaParaHTML(arquivoMD, capitulo, document);
+			
+			capitulos.add(capitulo);
+		});
+
+		return capitulos;
+	}
+
+	private Stream<Path> obtemArquivosMD(Path diretorioDosMD) {
 		PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**/*.md");
 		Stream<Path> arquivosMD = Stream.empty();
 		try {
@@ -24,35 +43,31 @@ public class RenderizadorMD {
 			throw new RuntimeException(
 					"Erro tentando encontrar arquivos .md em " + diretorioDosMD.toAbsolutePath(), ex);
 		}
-		
-		List<Capitulo> capitulos = new ArrayList<>();
-
-		arquivosMD.forEach(arquivoMD -> {
-			
-			Capitulo capitulo = new Capitulo();
-			
-			Parser parser = Parser.builder().build();
-			Node document = null;
-			try {
-				document = parser.parseReader(Files.newBufferedReader(arquivoMD));
-				document.accept(new HeadingVisitor(capitulo));
-			} catch (Exception ex) {
-				throw new RuntimeException("Error parsing file " + arquivoMD, ex);
-			}
-
-			try {
-				HtmlRenderer renderer = HtmlRenderer.builder().build();
-				String html = renderer.render(document);
-				
-				capitulo.setConteudoHTML(html);
-				
-			} catch (Exception ex) {
-				throw new RuntimeException("Erro ao renderizar para HTML o arquivo " + arquivoMD, ex);
-			}
-			
-			capitulos.add(capitulo);
-		});
-
-		return capitulos;
+		return arquivosMD;
 	}
+
+	private Node parseDoMD(Path arquivoMD, Capitulo capitulo) {
+		Parser parser = Parser.builder().build();
+		Node document = null;
+		try {
+			document = parser.parseReader(Files.newBufferedReader(arquivoMD));
+			document.accept(new HeadingVisitor(capitulo));
+		} catch (Exception ex) {
+			throw new RuntimeException("Error parsing file " + arquivoMD, ex);
+		}
+		return document;
+	}
+
+	private void renderizaParaHTML(Path arquivoMD, Capitulo capitulo, Node document) {
+		try {
+			HtmlRenderer renderer = HtmlRenderer.builder().build();
+			String html = renderer.render(document);
+			
+			capitulo.setConteudoHTML(html);
+			
+		} catch (Exception ex) {
+			throw new RuntimeException("Erro ao renderizar para HTML o arquivo " + arquivoMD, ex);
+		}
+	}
+
 }
