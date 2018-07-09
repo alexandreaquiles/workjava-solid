@@ -49,6 +49,8 @@ public class RenderizadorMD {
 			} catch (Exception ex) {
 				throw new RuntimeException("Erro ao renderizar para HTML o arquivo " + arquivoMD, ex);
 			}
+			
+			capitulos.add(capitulo);
 		});
 
 		return capitulos;
