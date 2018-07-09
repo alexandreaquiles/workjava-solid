@@ -3,6 +3,7 @@ package cotuba.cli;
 import java.nio.file.Path;
 
 import cotuba.application.Cotuba;
+import cotuba.domain.FormatoLivro;
 
 public class Main {
 
@@ -16,7 +17,7 @@ public class Main {
 			leitorCLI.le(args);
 	
 			Path diretorioDosMD = leitorCLI.getDiretorioDosMD();
-			String formato = leitorCLI.getFormato();
+			FormatoLivro formato = leitorCLI.getFormato();
 			Path arquivoDeSaida = leitorCLI.getArquivoDeSaida();
 			modoVerboso = leitorCLI.isModoVerboso();
 	

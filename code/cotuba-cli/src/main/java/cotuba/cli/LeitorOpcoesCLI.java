@@ -13,10 +13,12 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.UnrecognizedOptionException;
 
+import cotuba.domain.FormatoLivro;
+
 class LeitorOpcoesCLI {
 
 	private Path diretorioDosMD;
-	private String formato;
+	private FormatoLivro formato;
 	private Path arquivoDeSaida;
 	private boolean modoVerboso = false;
 
@@ -59,7 +61,7 @@ class LeitorOpcoesCLI {
 				throw new RuntimeException(nomeDoArquivoDeSaidaDoEbook + " é um diretório.");
 			}
 		} else {
-			arquivoDeSaida = Paths.get("book." + formato.toLowerCase());
+			arquivoDeSaida = Paths.get("book." + formato.name().toLowerCase());
 		}
 	}
 
@@ -68,13 +70,13 @@ class LeitorOpcoesCLI {
 
 		if (nomeDoFormatoDoEbook != null) {
 			try {
-				formato = nomeDoFormatoDoEbook.toLowerCase();
+				formato = FormatoLivro.valueOf(nomeDoFormatoDoEbook.toUpperCase());
 			} catch (IllegalArgumentException ex) {
 				throw new RuntimeException("O formato " + nomeDoFormatoDoEbook + " não é suportado.", ex);
 
 			}
 		} else {
-			formato = "pdf";
+			formato = FormatoLivro.PDF;
 		}
 	}
 
@@ -118,7 +120,7 @@ class LeitorOpcoesCLI {
 		return diretorioDosMD;
 	}
 
-	public String getFormato() {
+	public FormatoLivro getFormato() {
 		return formato;
 	}
 

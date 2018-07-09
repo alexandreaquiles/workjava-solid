@@ -4,11 +4,12 @@ import java.nio.file.Path;
 import java.util.List;
 
 import cotuba.domain.Capitulo;
+import cotuba.domain.FormatoLivro;
 import cotuba.domain.Livro;
 
 public class Cotuba {
 	
-	public void executa(Path diretorioDosMD, Path arquivoDeSaida, String formato) {
+	public void executa(Path diretorioDosMD, Path arquivoDeSaida, FormatoLivro formato) {
 		
 		Livro livro = new Livro(formato, arquivoDeSaida);
 
@@ -17,7 +18,7 @@ public class Cotuba {
 		
 		livro.adicionaCapitulos(capitulos);
 		
-		GeradorLivro geradorLivro = GeradorLivro.cria(formato);
+		GeradorLivro geradorLivro = formato.getGerador();
 
 		geradorLivro.gera(livro);
 

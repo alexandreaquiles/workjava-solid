@@ -6,18 +6,18 @@ import java.util.List;
 
 public class Livro {
 	
-	private String formato;
+	private FormatoLivro formato;
 	
 	private Path arquivoDeSaida;
 	
 	private List<Capitulo> capitulos = new ArrayList<>();
 
-	public Livro(String formato, Path arquivoDeSaida) {
+	public Livro(FormatoLivro formato, Path arquivoDeSaida) {
 		this.formato = formato;
 		this.arquivoDeSaida = arquivoDeSaida;
 	}
 
-	public String getFormato() {
+	public FormatoLivro getFormato() {
 		return formato;
 	}
 
