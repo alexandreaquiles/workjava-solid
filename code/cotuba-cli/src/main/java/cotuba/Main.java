@@ -5,17 +5,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.commonmark.node.AbstractVisitor;
 import org.commonmark.node.Heading;
 import org.commonmark.node.Node;
@@ -40,82 +32,17 @@ import nl.siegmann.epublib.service.MediatypeService;
 public class Main {
 
 	public static void main(String[] args) {
-		Options options = new Options();
-
-		Option opcaoDeDiretorioDosMD = new Option("d", "dir", true,
-				"Diretório que contem os arquivos md. Default: diretório atual.");
-		options.addOption(opcaoDeDiretorioDosMD);
-
-		Option opcaoDeFormatoDoEbook = new Option("f", "format", true,
-				"Formato de saída do ebook. Pode ser: pdf ou epub. Default: pdf");
-		options.addOption(opcaoDeFormatoDoEbook);
-
-		Option opcaoDeArquivoDeSaida = new Option("o", "output", true,
-				"Arquivo de saída do ebook. Default: book.{formato}.");
-		options.addOption(opcaoDeArquivoDeSaida);
-
-		Option opcaoModoVerboso = new Option("v", "verbose", false,
-				"Habilita modo verboso.");
-		options.addOption(opcaoModoVerboso);
 		
-		Options opcoesCLI = options;
+		LeitorOpcoesCLI leitorCLI = new LeitorOpcoesCLI();
+		leitorCLI.le(args);
 
-		CommandLineParser cmdParser = new DefaultParser();
-		HelpFormatter ajuda = new HelpFormatter();
-		CommandLine cmd;
-
-		try {
-			cmd = cmdParser.parse(opcoesCLI, args);
-		} catch (ParseException e) {
-			System.err.println(e.getMessage());
-			ajuda.printHelp("cotuba", opcoesCLI);
-			System.exit(1);
-			return;
-		}
-
-		Path diretorioDosMD;
-		String formato;
-		Path arquivoDeSaida;
-		boolean modoVerboso = false;
+		Path diretorioDosMD = leitorCLI.getDiretorioDosMD();
+		String formato = leitorCLI.getFormato();
+		Path arquivoDeSaida = leitorCLI.getArquivoDeSaida();
+		boolean modoVerboso = leitorCLI.isModoVerboso();
 
 		try {
 
-			String nomeDoDiretorioDosMD = cmd.getOptionValue("dir");
-
-			if (nomeDoDiretorioDosMD != null) {
-				diretorioDosMD = Paths.get(nomeDoDiretorioDosMD);
-				if (!Files.isDirectory(diretorioDosMD)) {
-					throw new RuntimeException(nomeDoDiretorioDosMD + " não é um diretório.");
-				}
-			} else {
-				Path diretorioAtual = Paths.get("");
-				diretorioDosMD = diretorioAtual;
-			}
-
-			String nomeDoFormatoDoEbook = cmd.getOptionValue("format");
-
-			if (nomeDoFormatoDoEbook != null) {
-				try {
-					formato = nomeDoFormatoDoEbook.toLowerCase();
-				} catch (IllegalArgumentException ex) {
-					throw new RuntimeException("O formato " + nomeDoFormatoDoEbook + " não é suportado.", ex);
-
-				}
-			} else {
-				formato = "pdf";
-			}
-
-			String nomeDoArquivoDeSaidaDoEbook = cmd.getOptionValue("output");
-			if (nomeDoArquivoDeSaidaDoEbook != null) {
-				arquivoDeSaida = Paths.get(nomeDoArquivoDeSaidaDoEbook);
-				if (Files.exists(arquivoDeSaida) && Files.isDirectory(arquivoDeSaida)) {
-					throw new RuntimeException(nomeDoArquivoDeSaidaDoEbook + " é um diretório.");
-				}
-			} else {
-				arquivoDeSaida = Paths.get("book." + formato.toLowerCase());
-			}
-
-			modoVerboso = cmd.hasOption("verbose");
 			
 			if ("pdf".equals(formato)) {
 				try {
