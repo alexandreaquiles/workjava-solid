@@ -9,10 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.commonmark.node.AbstractVisitor;
-import org.commonmark.node.Heading;
 import org.commonmark.node.Node;
-import org.commonmark.node.Text;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
@@ -38,22 +35,7 @@ public class RenderizadorMD {
 			Node document = null;
 			try {
 				document = parser.parseReader(Files.newBufferedReader(arquivoMD));
-				document.accept(new AbstractVisitor() {
-					public void visit(Heading heading) {
-						if (heading.getLevel() == 1) {
-							// capítulo
-							String tituloDoCapitulo = ((Text) heading.getFirstChild()).getLiteral();
-
-							capitulo.setTitulo(tituloDoCapitulo);
-
-						} else if (heading.getLevel() == 2) {
-							// seção
-						} else if (heading.getLevel() == 3) {
-							// título
-						}
-					}
-
-				});
+				document.accept(new HeadingVisitor(capitulo));
 			} catch (Exception ex) {
 				throw new RuntimeException("Error parsing file " + arquivoMD, ex);
 			}
