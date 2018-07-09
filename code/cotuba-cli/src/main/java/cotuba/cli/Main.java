@@ -1,7 +1,6 @@
 package cotuba.cli;
 
 import java.nio.file.Path;
-import java.util.Map;
 
 import cotuba.application.Cotuba;
 import cotuba.domain.FormatoLivro;
@@ -33,8 +32,8 @@ public class Main {
 				System.out.println("\nEstatísticas do livro");
 				
 				ContagemPalavras contagemPalavras = cotuba.getContagemPalavras();
-				for (Map.Entry<String, Integer> entry : contagemPalavras.entrySet()) {
-					System.out.println(entry.getKey() + "\t" + entry.getValue());
+				for (ContagemPalavras.Contagem contagem : contagemPalavras) {
+					System.out.println(contagem.getPalavra() + "\t" + contagem.getQuantidade());
 				}
 			}
 
