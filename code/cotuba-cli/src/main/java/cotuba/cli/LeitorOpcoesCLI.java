@@ -21,6 +21,7 @@ class LeitorOpcoesCLI {
 	private FormatoLivro formato;
 	private Path arquivoDeSaida;
 	private boolean modoVerboso = false;
+	private boolean calcularEstatisticas = false;
 
 	public void le(String[] args) {
 		Options opcoesCLI = criaOpcoes();
@@ -46,7 +47,13 @@ class LeitorOpcoesCLI {
 		trataArquivoDeSaida(cmd);
 
 		trataModoVerboso(cmd);
+		
+		trataCalcularEstatisticas(cmd);
 
+	}
+
+	private void trataCalcularEstatisticas(CommandLine cmd) {
+		calcularEstatisticas = cmd.hasOption("stats");
 	}
 
 	private void trataModoVerboso(CommandLine cmd) {
@@ -112,6 +119,9 @@ class LeitorOpcoesCLI {
 		Option opcaoModoVerboso = new Option("v", "verbose", false, "Habilita modo verboso.");
 		options.addOption(opcaoModoVerboso);
 
+		Option opcaoCalcularEstatisticas = new Option("s", "stats", false, "Habilita geração de estatísticas do livro.");
+		options.addOption(opcaoCalcularEstatisticas);
+
 		Options opcoesCLI = options;
 		return opcoesCLI;
 	}
@@ -130,6 +140,10 @@ class LeitorOpcoesCLI {
 
 	public boolean isModoVerboso() {
 		return modoVerboso;
+	}
+	
+	public boolean isCalcularEstatisticas() {
+		return calcularEstatisticas;
 	}
 
 }

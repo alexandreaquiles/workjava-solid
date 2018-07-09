@@ -10,7 +10,7 @@ import cotuba.plugin.GerouLivro;
 
 public class Cotuba {
 	
-	public void executa(Path diretorioDosMD, Path arquivoDeSaida, FormatoLivro formato) {
+	public void executa(Path diretorioDosMD, Path arquivoDeSaida, FormatoLivro formato, boolean calcularEstatisticas) {
 		
 		Livro livro = new Livro(formato, arquivoDeSaida);
 

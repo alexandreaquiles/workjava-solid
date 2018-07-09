@@ -20,9 +20,10 @@ public class Main {
 			FormatoLivro formato = leitorCLI.getFormato();
 			Path arquivoDeSaida = leitorCLI.getArquivoDeSaida();
 			modoVerboso = leitorCLI.isModoVerboso();
-	
+			boolean calcularEstatisticas = leitorCLI.isCalcularEstatisticas();
+			
 			Cotuba cotuba = new Cotuba();
-			cotuba.executa(diretorioDosMD, arquivoDeSaida, formato);
+			cotuba.executa(diretorioDosMD, arquivoDeSaida, formato, calcularEstatisticas);
 	
 			System.out.println("Arquivo gerado com sucesso: " + arquivoDeSaida);
 
