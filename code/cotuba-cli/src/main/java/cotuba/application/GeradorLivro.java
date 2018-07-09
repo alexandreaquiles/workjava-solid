@@ -1,8 +1,8 @@
 package cotuba.application;
 
 import cotuba.domain.Livro;
-import cotuba.epub.GeradorEPUBComEpubLib;
-import cotuba.pdf.GeradorPDFComIText;
+import cotuba.epub.GeradorEPUB;
+import cotuba.pdf.GeradorPDF;
 
 public interface GeradorLivro {
 
@@ -13,11 +13,11 @@ public interface GeradorLivro {
 		
 		if ("pdf".equals(formato)) {
 		
-			geradorLivro = new GeradorPDFComIText();
+			geradorLivro = new GeradorPDF();
 		
 		} else if ("epub".equals(formato)) {
 		
-			geradorLivro = new GeradorEPUBComEpubLib();
+			geradorLivro = new GeradorEPUB();
 		
 		} else {
 			throw new RuntimeException("Formato do ebook inválido: " + formato);
