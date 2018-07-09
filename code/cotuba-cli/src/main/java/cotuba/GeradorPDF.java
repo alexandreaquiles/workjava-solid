@@ -15,18 +15,29 @@ import com.itextpdf.layout.property.AreaBreakType;
 
 public class GeradorPDF {
 	
-	public void gera(Path diretorioDosMD, Path arquivoDeSaida) {
+	public void gera(Livro livro) {
+		Path arquivoDeSaida = livro.getArquivoDeSaida();
+
 		try {
+			
 			PdfWriter writer = new PdfWriter(Files.newOutputStream(arquivoDeSaida));
 			PdfDocument pdf = new PdfDocument(writer);
 			Document pdfDocument = new Document(pdf);
+			
+			for (Capitulo capitulo : livro.getCapitulos()) {
 
-			List<IElement> convertToElements = HtmlConverter.convertToElements(html);
-			for (IElement element : convertToElements) {
-				pdfDocument.add((IBlockElement) element);
+				String conteudoHTML = capitulo.getConteudoHTML();
+				
+				List<IElement> convertToElements = HtmlConverter.convertToElements(conteudoHTML);
+				for (IElement element : convertToElements) {
+					pdfDocument.add((IBlockElement) element);
+				}
+
+				if (!capitulo.equals(livro.ultimoCapitulo())) {
+					pdfDocument.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+				}
+				
 			}
-			// TODO: não adicionar página depois do último capítulo
-			pdfDocument.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
 			pdfDocument.close();
 		} catch (Exception ex) {

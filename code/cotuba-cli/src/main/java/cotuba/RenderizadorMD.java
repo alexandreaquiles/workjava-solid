@@ -5,6 +5,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.commonmark.node.AbstractVisitor;
@@ -16,7 +18,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 public class RenderizadorMD {
 
-	public void renderiza(Path diretorioDosMD) {
+	public List<Capitulo> renderiza(Path diretorioDosMD) {
 		PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:**/*.md");
 		Stream<Path> arquivosMD = Stream.empty();
 		try {
@@ -25,8 +27,13 @@ public class RenderizadorMD {
 			throw new RuntimeException(
 					"Erro tentando encontrar arquivos .md em " + diretorioDosMD.toAbsolutePath(), ex);
 		}
+		
+		List<Capitulo> capitulos = new ArrayList<>();
 
 		arquivosMD.forEach(arquivoMD -> {
+			
+			Capitulo capitulo = new Capitulo();
+			
 			Parser parser = Parser.builder().build();
 			Node document = null;
 			try {
@@ -36,7 +43,9 @@ public class RenderizadorMD {
 						if (heading.getLevel() == 1) {
 							// capítulo
 							String tituloDoCapitulo = ((Text) heading.getFirstChild()).getLiteral();
-							// TODO: usar título do capítulo
+
+							capitulo.setTitulo(tituloDoCapitulo);
+
 						} else if (heading.getLevel() == 2) {
 							// seção
 						} else if (heading.getLevel() == 3) {
@@ -52,10 +61,14 @@ public class RenderizadorMD {
 			try {
 				HtmlRenderer renderer = HtmlRenderer.builder().build();
 				String html = renderer.render(document);
+				
+				capitulo.setConteudoHTML(html);
+				
 			} catch (Exception ex) {
 				throw new RuntimeException("Erro ao renderizar para HTML o arquivo " + arquivoMD, ex);
 			}
 		});
 
+		return capitulos;
 	}
 }

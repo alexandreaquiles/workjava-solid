@@ -33,4 +33,8 @@ public class Livro {
 		this.capitulos.addAll(capitulos);
 	}
 
+	public Capitulo ultimoCapitulo() {
+		return this.capitulos.get(this.capitulos.size() - 1);
+	}
+
 }

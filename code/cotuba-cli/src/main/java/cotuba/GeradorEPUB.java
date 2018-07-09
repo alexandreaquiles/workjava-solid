@@ -1,18 +1,8 @@
 package cotuba;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.util.stream.Stream;
-
-import org.commonmark.node.AbstractVisitor;
-import org.commonmark.node.Heading;
-import org.commonmark.node.Node;
-import org.commonmark.node.Text;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 
 import nl.siegmann.epublib.domain.Book;
 import nl.siegmann.epublib.domain.Resource;
@@ -21,13 +11,19 @@ import nl.siegmann.epublib.service.MediatypeService;
 
 public class GeradorEPUB {
 
-	public void gera(Path diretorioDosMD, Path arquivoDeSaida) {
+	public void gera(Livro livro) {
 		Book epub = new Book();
 
-		// TODO: usar título do capítulo
-		epub.addSection("Capítulo", new Resource(html.getBytes(), MediatypeService.XHTML));
+		for (Capitulo capitulo : livro.getCapitulos()) {
+			String titulo = capitulo.getTitulo();
+			String conteudoHTML = capitulo.getConteudoHTML();
+			
+			epub.addSection(titulo, new Resource(conteudoHTML.getBytes(), MediatypeService.XHTML));
+		}
 
 		EpubWriter epubWriter = new EpubWriter();
+
+		Path arquivoDeSaida = livro.getArquivoDeSaida();
 
 		try {
 			epubWriter.write(epub, Files.newOutputStream(arquivoDeSaida));
