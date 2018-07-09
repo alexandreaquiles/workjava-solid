@@ -2,7 +2,6 @@ package cotuba.application;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import cotuba.domain.Capitulo;
 import cotuba.domain.FormatoLivro;
@@ -13,6 +12,8 @@ import cotuba.plugin.GerouLivro;
 
 public class Cotuba {
 	
+	private ContagemPalavras contagemPalavras;
+
 	public void executa(Path diretorioDosMD, Path arquivoDeSaida, FormatoLivro formato, boolean calcularEstatisticas) {
 		
 		Livro livro = new Livro(formato, arquivoDeSaida);
@@ -30,12 +31,11 @@ public class Cotuba {
 		
 		if (calcularEstatisticas) {
 			CalculadoraEstatisticasLivro calculadoraEstatisticas = new CalculadoraEstatisticasLivro();
-			ContagemPalavras contagemPalavras = calculadoraEstatisticas.contaPalavras(livro);
-			for (Map.Entry<String, Integer> entry : contagemPalavras.entrySet()) {
-				System.out.println(entry.getKey() + "\t" + entry.getValue());
-			}
+			contagemPalavras = calculadoraEstatisticas.contaPalavras(livro);
 		}
-
 	}
 
+	public ContagemPalavras getContagemPalavras() {
+		return contagemPalavras;
+	}
 }
