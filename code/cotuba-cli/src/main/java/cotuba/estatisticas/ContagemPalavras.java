@@ -1,5 +1,6 @@
 package cotuba.estatisticas;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -56,5 +57,15 @@ public class ContagemPalavras extends TreeMap<String, Integer> implements Iterab
 			}
 			
 		};
+	}
+
+	@Override
+	public void clear() {
+		throw new UnsupportedOperationException();
+	}
+	
+	@Override
+	public Collection<Integer> values() {
+		throw new UnsupportedOperationException();
 	}
 }

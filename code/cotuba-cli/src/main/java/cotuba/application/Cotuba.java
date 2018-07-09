@@ -32,6 +32,8 @@ public class Cotuba {
 		if (calcularEstatisticas) {
 			CalculadoraEstatisticasLivro calculadoraEstatisticas = new CalculadoraEstatisticasLivro();
 			contagemPalavras = calculadoraEstatisticas.contaPalavras(livro);
+			
+			contagemPalavras.clear();
 		}
 	}
 
