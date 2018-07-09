@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ContagemPalavras implements Iterable<ContagemPalavras.Contagem> {
+public final class ContagemPalavras implements Iterable<ContagemPalavras.Contagem> {
 
 	private Map<String, Integer> map = new TreeMap<String, Integer>();
 	
