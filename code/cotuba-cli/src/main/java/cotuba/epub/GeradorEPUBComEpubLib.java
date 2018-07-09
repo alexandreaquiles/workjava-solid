@@ -12,7 +12,7 @@ import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.epub.EpubWriter;
 import nl.siegmann.epublib.service.MediatypeService;
 
-public class GeradorEPUBImpl implements GeradorEPUB {
+public class GeradorEPUBComEpubLib implements GeradorEPUB {
 
 	@Override
 	public void gera(Livro livro) {

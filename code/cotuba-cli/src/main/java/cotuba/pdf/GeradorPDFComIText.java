@@ -17,7 +17,7 @@ import cotuba.application.GeradorPDF;
 import cotuba.domain.Capitulo;
 import cotuba.domain.Livro;
 
-public class GeradorPDFImpl implements GeradorPDF {
+public class GeradorPDFComIText implements GeradorPDF {
 	
 	@Override
 	public void gera(Livro livro) {

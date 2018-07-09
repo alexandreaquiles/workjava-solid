@@ -16,7 +16,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import cotuba.application.RenderizadorMD;
 import cotuba.domain.Capitulo;
 
-public class RenderizadorMDImpl implements RenderizadorMD {
+public class RenderizadorMDComCommonMark implements RenderizadorMD {
 
 	@Override
 	public List<Capitulo> renderiza(Path diretorioDosMD) {
