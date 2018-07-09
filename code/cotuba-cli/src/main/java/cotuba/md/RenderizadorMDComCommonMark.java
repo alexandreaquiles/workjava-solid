@@ -15,6 +15,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 import cotuba.application.RenderizadorMD;
 import cotuba.domain.Capitulo;
+import cotuba.plugin.Plugin;
 
 public class RenderizadorMDComCommonMark implements RenderizadorMD {
 
@@ -31,6 +32,8 @@ public class RenderizadorMDComCommonMark implements RenderizadorMD {
 			Node document = parseDoMD(arquivoMD, capitulo);
 
 			renderizaParaHTML(arquivoMD, capitulo, document);
+			
+			Plugin.renderizouMD(capitulo);
 			
 			capitulos.add(capitulo);
 		});

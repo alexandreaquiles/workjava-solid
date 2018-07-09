@@ -6,6 +6,7 @@ import java.util.List;
 import cotuba.domain.Capitulo;
 import cotuba.domain.FormatoLivro;
 import cotuba.domain.Livro;
+import cotuba.plugin.Plugin;
 
 public class Cotuba {
 	
@@ -21,6 +22,8 @@ public class Cotuba {
 		GeradorLivro geradorLivro = formato.getGerador();
 
 		geradorLivro.gera(livro);
+		
+		Plugin.gerou(livro);
 
 	}
 
