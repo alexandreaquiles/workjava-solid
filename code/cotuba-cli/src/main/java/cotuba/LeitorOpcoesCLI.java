@@ -11,6 +11,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.UnrecognizedOptionException;
 
 public class LeitorOpcoesCLI {
 
@@ -45,11 +46,12 @@ public class LeitorOpcoesCLI {
 
 		try {
 			cmd = cmdParser.parse(opcoesCLI, args);
-		} catch (ParseException e) {
-			System.err.println(e.getMessage());
+		} catch (UnrecognizedOptionException e) {
+			String opcao = e.getOption();
 			ajuda.printHelp("cotuba", opcoesCLI);
-			System.exit(1);
-			return;
+			throw new RuntimeException("Opção inválida: " + opcao, e);
+		} catch (ParseException e) {
+			throw new RuntimeException("Erro ao analisar opções de linha de comando", e);
 		}
 
 		String nomeDoDiretorioDosMD = cmd.getOptionValue("dir");
