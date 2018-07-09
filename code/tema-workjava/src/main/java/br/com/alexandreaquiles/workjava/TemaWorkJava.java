@@ -4,10 +4,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import cotuba.domain.Capitulo;
-import cotuba.domain.Livro;
-import cotuba.plugin.Plugin;
+import cotuba.plugin.RenderizouMD;
 
-public class TemaWorkJava implements Plugin {
+public class TemaWorkJava implements RenderizouMD {
 
 	@Override
 	public void aposRenderizacaoMD(Capitulo capitulo) {
@@ -26,11 +25,6 @@ public class TemaWorkJava implements Plugin {
 			throw new RuntimeException("Erro ao ler CSS do tema WorkJava", e);
 		}
 		
-	}
-
-	@Override
-	public void aoFinalizarGeracao(Livro livro) {
-
 	}
 
 }
