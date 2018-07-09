@@ -13,6 +13,7 @@ import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
+import cotuba.application.IRenderizadorMD;
 import cotuba.domain.Capitulo;
 
 public class RenderizadorMD implements IRenderizadorMD {

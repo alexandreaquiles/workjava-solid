@@ -1,4 +1,4 @@
-package cotuba.pdf;
+package cotuba.application;
 
 import cotuba.domain.Livro;
 

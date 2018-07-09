@@ -1,4 +1,4 @@
-package cotuba.md;
+package cotuba.application;
 
 import java.nio.file.Path;
 import java.util.List;

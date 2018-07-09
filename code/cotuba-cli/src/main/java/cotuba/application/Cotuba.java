@@ -6,11 +6,8 @@ import java.util.List;
 import cotuba.domain.Capitulo;
 import cotuba.domain.Livro;
 import cotuba.epub.GeradorEPUB;
-import cotuba.epub.IGeradorEPUB;
-import cotuba.md.IRenderizadorMD;
 import cotuba.md.RenderizadorMD;
 import cotuba.pdf.GeradorPDF;
-import cotuba.pdf.IGeradorPDF;
 
 public class Cotuba {
 	

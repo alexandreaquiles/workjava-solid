@@ -1,4 +1,4 @@
-package cotuba.epub;
+package cotuba.application;
 
 import cotuba.domain.Livro;
 
