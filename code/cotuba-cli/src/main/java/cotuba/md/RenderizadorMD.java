@@ -15,8 +15,9 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 import cotuba.domain.Capitulo;
 
-public class RenderizadorMD {
+public class RenderizadorMD implements IRenderizadorMD {
 
+	@Override
 	public List<Capitulo> renderiza(Path diretorioDosMD) {
 		Stream<Path> arquivosMD = obtemArquivosMD(diretorioDosMD);
 		
