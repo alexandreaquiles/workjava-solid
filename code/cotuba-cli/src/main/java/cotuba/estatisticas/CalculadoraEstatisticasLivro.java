@@ -17,7 +17,10 @@ public class CalculadoraEstatisticasLivro {
 			Document document = Jsoup.parse(conteudoHTML);
 			String textoCapitulo = document.body().text();
 			for (String palavra : textoCapitulo.split("\\s+")) {
-				contagem.adicionaPalavra(palavra);
+				String palavrasSemPontuacao = palavra.trim().replaceAll("\\p{Punct}", "");
+				if (!palavrasSemPontuacao.isEmpty()) {
+					contagem.adicionaPalavra(palavrasSemPontuacao);
+				}
 			}
 		}
 		
