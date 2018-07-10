@@ -8,6 +8,7 @@ import cotuba.domain.FormatoLivro;
 import cotuba.domain.Livro;
 import cotuba.estatisticas.CalculadoraEstatisticasLivro;
 import cotuba.estatisticas.ContagemPalavras;
+import cotuba.plugin.GeradorLivro;
 import cotuba.plugin.GerouLivro;
 
 public class Cotuba {
@@ -23,7 +24,7 @@ public class Cotuba {
 		
 		livro.adicionaCapitulos(capitulos);
 		
-		GeradorLivro geradorLivro = formato.getGerador();
+		GeradorLivro geradorLivro = GeradorLivro.cria(formato);
 
 		geradorLivro.gera(livro);
 		

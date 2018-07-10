@@ -13,9 +13,10 @@ import com.itextpdf.layout.element.IBlockElement;
 import com.itextpdf.layout.element.IElement;
 import com.itextpdf.layout.property.AreaBreakType;
 
-import cotuba.application.GeradorLivro;
 import cotuba.domain.Capitulo;
+import cotuba.domain.FormatoLivro;
 import cotuba.domain.Livro;
+import cotuba.plugin.GeradorLivro;
 
 public class GeradorPDF implements GeradorLivro {
 	
@@ -49,6 +50,11 @@ public class GeradorPDF implements GeradorLivro {
 			throw new RuntimeException("Erro ao criar arquivo PDF: " + arquivoDeSaida.toAbsolutePath(), ex);
 		}
 
+	}
+
+	@Override
+	public FormatoLivro formato() {
+		return FormatoLivro.PDF;
 	}
 
 }
