@@ -1,0 +1,32 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+	<id>distribution</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<moduleSets>
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<sources>
+				<fileSets>
+					<fileSet>
+					  <directory>${project.basedir}/src/scripts</directory>
+					  <outputDirectory>${file.separator}</outputDirectory>
+					  <includes>
+					    <include>cotuba.sh</include>
+					    <include>cotuba.bat</include>		    
+					  </includes>
+					</fileSet>
+				</fileSets>
+				<includeModuleDirectory>false</includeModuleDirectory>
+			</sources>
+		</moduleSet>
+	</moduleSets>
+  	<dependencySets>
+		<dependencySet>
+			<outputDirectory>libs</outputDirectory>
+		</dependencySet>
+	</dependencySets>
+</assembly>
