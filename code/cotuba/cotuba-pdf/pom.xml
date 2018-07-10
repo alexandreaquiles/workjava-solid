@@ -5,7 +5,7 @@
     <artifactId>cotuba</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>cotuba-pdf</groupId>
+
   <artifactId>cotuba-pdf</artifactId>
   
   <dependencies>
