@@ -1,7 +1,7 @@
 package cotuba.estatisticas;
 
-import com.itextpdf.html2pdf.jsoup.Jsoup;
-import com.itextpdf.html2pdf.jsoup.nodes.Document;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import cotuba.domain.Capitulo;
 import cotuba.domain.Livro;
